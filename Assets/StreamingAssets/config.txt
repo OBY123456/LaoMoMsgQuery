@@ -1,0 +1,1 @@
+{"Backtime":200,"Port":8060,"isCursor":true,"r":700.0,"Logo":"123","MaxScale":2.5,"MinScale":1.0}

@@ -10,6 +10,8 @@ public class ConfigData
     /// </summary>
     public int Backtime;
 
+    public string Ip;
+
     /// <summary>
     /// UDP端口号
     /// </summary>
@@ -39,6 +41,16 @@ public class ConfigData
     /// 大圆最小缩放
     /// </summary>
     public float MinScale;
+
+    public float 百度手写框宽;
+
+    public float 百度手写框高;
+
+    public float 图片宽;
+
+    public float 图片高;
+
+    public bool 是否开启软件前置;
 }
 
 
@@ -84,7 +96,7 @@ public class Config : MonoBehaviour
 
     private void OnDestroy()
     {
-        SaveData();
+        //SaveData();
     }
 
     public void SaveData()

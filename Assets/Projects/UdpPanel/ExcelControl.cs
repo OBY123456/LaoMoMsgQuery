@@ -50,9 +50,12 @@ public class ExcelControl : MonoBehaviour
     public ExcelData ShiJiData;
     public ExcelData GuoJiaJiData;
 
-    private Dictionary<string, PersonData> ShengJiMsg = new Dictionary<string, PersonData>();
-    private Dictionary<string, PersonData> ShiJiMsg = new Dictionary<string, PersonData>();
-    private Dictionary<string, PersonData> QuanGuoMsg = new Dictionary<string, PersonData>();
+    public Dictionary<string, PersonData> ShengJiMsg = new Dictionary<string, PersonData>();
+    public Dictionary<string, PersonData> ShiJiMsg = new Dictionary<string, PersonData>();
+    public Dictionary<string, PersonData> QuanGuoMsg = new Dictionary<string, PersonData>();
+
+    public List<Texture2D> PicGroup = new List<Texture2D>();
+    public List<string> VideoPath = new List<string>();
 
     private void Awake()
     {
@@ -61,6 +64,63 @@ public class ExcelControl : MonoBehaviour
         ShengJiData = LoadData(ShengJi);
         ShiJiData = LoadData(ShiJi);
         GuoJiaJiData = LoadData(QuanGuo);
+
+        for (int i = 1; i < ShengJiData.rows - 1; i++)
+        {
+            PersonData personData = new PersonData();
+            personData.Type = ShengJiData.dataSet.Tables[0].Rows[i][0].ToString();
+            personData.Name = ShengJiData.dataSet.Tables[0].Rows[i][1].ToString();
+            personData.Sex = "(" + ShengJiData.dataSet.Tables[0].Rows[i][2].ToString() + ")";
+            personData.Msg = Sentence(Replace(ShengJiData.dataSet.Tables[0].Rows[i][3].ToString()), ShengJiData.dataSet.Tables[0].Rows[i][5].ToString(),
+                ShengJiData.dataSet.Tables[0].Rows[i][4].ToString(), ShengJiData.dataSet.Tables[0].Rows[i][8].ToString(), ShengJiData.dataSet.Tables[0].Rows[i][7].ToString());
+
+            if(!ShengJiMsg.ContainsKey(personData.Name))
+            {
+                ShengJiMsg.Add(personData.Name, personData);
+            }     
+        }
+
+        for (int j = 1; j < ShiJiData.rows - 1; j++)
+        {
+            PersonData personData = new PersonData();
+            personData.Type = ShiJiData.dataSet.Tables[0].Rows[j][0].ToString();
+            personData.Name = ShiJiData.dataSet.Tables[0].Rows[j][1].ToString(); 
+            personData.Sex = "(" + ShiJiData.dataSet.Tables[0].Rows[j][2].ToString() + ")";
+            personData.Msg = Sentence(Replace(ShiJiData.dataSet.Tables[0].Rows[j][3].ToString()), ShiJiData.dataSet.Tables[0].Rows[j][7].ToString(),
+                ShiJiData.dataSet.Tables[0].Rows[j][5].ToString(), ShiJiData.dataSet.Tables[0].Rows[j][11].ToString(), ShiJiData.dataSet.Tables[0].Rows[j][10].ToString());
+
+            if (!ShiJiMsg.ContainsKey(personData.Name))
+            {
+                ShiJiMsg.Add(personData.Name, personData);
+            }
+        }
+
+        for (int k = 1; k < GuoJiaJiData.rows - 1; k++)
+        {
+            PersonData personData = new PersonData();
+            personData.Type = GuoJiaJiData.dataSet.Tables[0].Rows[k][0].ToString();
+            personData.Name = GuoJiaJiData.dataSet.Tables[0].Rows[k][1].ToString();
+            personData.Sex = "(" + GuoJiaJiData.dataSet.Tables[0].Rows[k][2].ToString() + ")";
+            personData.Msg = Sentence(Replace(GuoJiaJiData.dataSet.Tables[0].Rows[k][3].ToString()), GuoJiaJiData.dataSet.Tables[0].Rows[k][5].ToString(),
+                GuoJiaJiData.dataSet.Tables[0].Rows[k][4].ToString(), GuoJiaJiData.dataSet.Tables[0].Rows[k][8].ToString(), GuoJiaJiData.dataSet.Tables[0].Rows[k][7].ToString());
+
+            if (!QuanGuoMsg.ContainsKey(personData.Name))
+            {
+                QuanGuoMsg.Add(personData.Name, personData);
+            }
+        }
+
+        List<string> PicPath = new List<string>();
+        PicPath = FileHandle.Instance.GetImagePath(Application.streamingAssetsPath + "/Picture");
+        if(PicPath.Count > 0)
+        {
+            for (int i = 0; i < PicPath.Count; i++)
+            {
+                PicGroup.Add(FileHandle.Instance.LoadByIO(PicPath[i]));
+            }
+        }
+
+        VideoPath = FileHandle.Instance.GetVideoPath(Application.streamingAssetsPath + "/Video");
     }
 
     private ExcelData LoadData(string Path)
@@ -121,16 +181,20 @@ public class ExcelControl : MonoBehaviour
                 }
                 else
                 {
-                    PersonData personData = new PersonData();
-                    personData.Type = ShengJiData.dataSet.Tables[0].Rows[num][0].ToString();
-                    personData.Name = st1;
-                    personData.Sex = "(" + ShengJiData.dataSet.Tables[0].Rows[num][2].ToString() + ")";
-                    personData.Msg = Sentence(Replace(ShengJiData.dataSet.Tables[0].Rows[num][3].ToString()), ShengJiData.dataSet.Tables[0].Rows[num][5].ToString(),
-                        ShengJiData.dataSet.Tables[0].Rows[num][4].ToString(), ShengJiData.dataSet.Tables[0].Rows[num][8].ToString(), ShengJiData.dataSet.Tables[0].Rows[num][7].ToString());
-
-                    ShengJiMsg.Add(personData.Name, personData);
-                    return personData;
+                    return null;
                 }
+            //else
+            //{
+            //    PersonData personData = new PersonData();
+            //    personData.Type = ShengJiData.dataSet.Tables[0].Rows[num][0].ToString();
+            //    personData.Name = st1;
+            //    personData.Sex = "(" + ShengJiData.dataSet.Tables[0].Rows[num][2].ToString() + ")";
+            //    personData.Msg = Sentence(Replace(ShengJiData.dataSet.Tables[0].Rows[num][3].ToString()), ShengJiData.dataSet.Tables[0].Rows[num][5].ToString(),
+            //        ShengJiData.dataSet.Tables[0].Rows[num][4].ToString(), ShengJiData.dataSet.Tables[0].Rows[num][8].ToString(), ShengJiData.dataSet.Tables[0].Rows[num][7].ToString());
+
+            //    ShengJiMsg.Add(personData.Name, personData);
+            //    return personData;
+            //}
             case LaoMoType.市级:
                 num = UnityEngine.Random.Range(1, ShiJiData.rows - 1);
 
@@ -150,16 +214,20 @@ public class ExcelControl : MonoBehaviour
                 }
                 else
                 {
-                    PersonData personData = new PersonData();
-                    personData.Type = ShiJiData.dataSet.Tables[0].Rows[num][0].ToString();
-                    personData.Name = st2;
-                    personData.Sex = "(" + ShiJiData.dataSet.Tables[0].Rows[num][2].ToString() + ")";
-                    personData.Msg = Sentence(Replace(ShiJiData.dataSet.Tables[0].Rows[num][3].ToString()), ShiJiData.dataSet.Tables[0].Rows[num][7].ToString(),
-                        ShiJiData.dataSet.Tables[0].Rows[num][5].ToString(), ShiJiData.dataSet.Tables[0].Rows[num][11].ToString(), ShiJiData.dataSet.Tables[0].Rows[num][10].ToString()); ;
-
-                    ShiJiMsg.Add(personData.Name, personData);
-                    return personData;
+                    return null;
                 }
+                //else
+                //{
+                //    PersonData personData = new PersonData();
+                //    personData.Type = ShiJiData.dataSet.Tables[0].Rows[num][0].ToString();
+                //    personData.Name = st2;
+                //    personData.Sex = "(" + ShiJiData.dataSet.Tables[0].Rows[num][2].ToString() + ")";
+                //    personData.Msg = Sentence(Replace(ShiJiData.dataSet.Tables[0].Rows[num][3].ToString()), ShiJiData.dataSet.Tables[0].Rows[num][7].ToString(),
+                //        ShiJiData.dataSet.Tables[0].Rows[num][5].ToString(), ShiJiData.dataSet.Tables[0].Rows[num][11].ToString(), ShiJiData.dataSet.Tables[0].Rows[num][10].ToString()); ;
+
+                //    ShiJiMsg.Add(personData.Name, personData);
+                //    return personData;
+                //}
             case LaoMoType.全国:
                 num = UnityEngine.Random.Range(1, GuoJiaJiData.rows - 1);
 
@@ -179,16 +247,20 @@ public class ExcelControl : MonoBehaviour
                 }
                 else
                 {
-                    PersonData personData = new PersonData();
-                    personData.Type = GuoJiaJiData.dataSet.Tables[0].Rows[num][0].ToString();
-                    personData.Name = st3;
-                    personData.Sex = "(" + GuoJiaJiData.dataSet.Tables[0].Rows[num][2].ToString() + ")";
-                    personData.Msg = Sentence(Replace(GuoJiaJiData.dataSet.Tables[0].Rows[num][3].ToString()), GuoJiaJiData.dataSet.Tables[0].Rows[num][5].ToString(),
-                        GuoJiaJiData.dataSet.Tables[0].Rows[num][4].ToString(), GuoJiaJiData.dataSet.Tables[0].Rows[num][8].ToString(), GuoJiaJiData.dataSet.Tables[0].Rows[num][7].ToString()); ;
-
-                    QuanGuoMsg.Add(personData.Name, personData);
-                    return personData;
+                    return null;
                 }
+                //else
+                //{
+                //    PersonData personData = new PersonData();
+                //    personData.Type = GuoJiaJiData.dataSet.Tables[0].Rows[num][0].ToString();
+                //    personData.Name = st3;
+                //    personData.Sex = "(" + GuoJiaJiData.dataSet.Tables[0].Rows[num][2].ToString() + ")";
+                //    personData.Msg = Sentence(Replace(GuoJiaJiData.dataSet.Tables[0].Rows[num][3].ToString()), GuoJiaJiData.dataSet.Tables[0].Rows[num][5].ToString(),
+                //        GuoJiaJiData.dataSet.Tables[0].Rows[num][4].ToString(), GuoJiaJiData.dataSet.Tables[0].Rows[num][8].ToString(), GuoJiaJiData.dataSet.Tables[0].Rows[num][7].ToString()); ;
+
+                //    QuanGuoMsg.Add(personData.Name, personData);
+                //    return personData;
+                //}
         }
         return null;
     }

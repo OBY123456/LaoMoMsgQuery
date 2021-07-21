@@ -94,8 +94,20 @@ public class FileHandle
             {
                 filePaths.Add(dirs[j]);
             }
-            Debug.Log(ImageType[i] + ":一共读取到" + dirs.Length + "张图片");
+            //Debug.Log(ImageType[i] + ":一共读取到" + dirs.Length + "张图片");
         }
+        return filePaths;
+    }
+
+    public List<string> GetVideoPath(string Path)
+    {
+        List<string> filePaths = new List<string>();
+        string[] dirs = Directory.GetFiles(Path, "*.mp4");
+        for (int j = 0; j < dirs.Length; j++)
+        {
+            filePaths.Add(dirs[j]);
+        }
+        //Debug.Log(".mp4" + ":一共读取到" + dirs.Length + "个视频");
         return filePaths;
     }
 

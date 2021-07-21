@@ -125,4 +125,14 @@ public class MyCircle_ImageItem : MyUIBase {
     {
         PoolManager.Instance.AddPool(MTFrame.MTPool.PoolType.CirleImage, gameObject);
     }
+
+    public void Hide()
+    {
+        isEnable = false;
+    }
+
+    public void Open()
+    {
+        isEnable = true;
+    }
 }

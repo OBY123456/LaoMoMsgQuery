@@ -12,5 +12,6 @@ namespace MTFrame. MTPool
         GenericProp,
         BigImage,
         CirleImage,
+        ResultText,
     }
 }

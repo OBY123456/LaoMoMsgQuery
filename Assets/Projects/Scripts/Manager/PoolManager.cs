@@ -16,6 +16,10 @@ public class PoolManager:MonoBehaviour
     [Header("小圆池预设")]
     public GameObject CirleImagePrefabs;
 
+    public static ResultTextPool ResulttextPool;
+    [Header("结果文本预设")]
+    public GameObject ResulttextPrefabs;
+
     private void Awake()
     {
         Instance = this;
@@ -33,6 +37,9 @@ public class PoolManager:MonoBehaviour
 
         CirleimagePool = new CirleImagePool();
         CirleimagePool.Init();
+
+        ResulttextPool = new ResultTextPool();
+        ResulttextPool.Init();
     }
 
     /// <summary>
@@ -47,6 +54,9 @@ public class PoolManager:MonoBehaviour
                 break;
             case PoolType.CirleImage:
                 CirleimagePool.AddPool(go);
+                break;
+            case PoolType.ResultText:
+                ResulttextPool.AddPool(go);
                 break;
             default:
                 break;
@@ -76,6 +86,14 @@ public class PoolManager:MonoBehaviour
                     CirleimagePool.UsePool.Add(t);
                 }
                 break;
+            case PoolType.ResultText:
+                t = ResulttextPool.GetPool();
+                if (t == null)
+                {
+                    t = Instantiate(ResulttextPrefabs);
+                    ResulttextPool.UsePool.Add(t);
+                }
+                break;
             default:
                 t = null;
                 break;
@@ -87,5 +105,6 @@ public class PoolManager:MonoBehaviour
     {
         BigimagePool.Clear();
         CirleimagePool.Clear();
+        ResulttextPool.Clear();
     }
 }

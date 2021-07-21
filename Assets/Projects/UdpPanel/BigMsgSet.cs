@@ -10,10 +10,10 @@ public class BigMsgSet : MonoBehaviour
 
     private void Awake()
     {
-        Msg = transform.Find("msg").GetComponent<Text>();
-        Type = transform.Find("type").GetComponent<Text>();
-        Sex = transform.Find("sex").GetComponent<Text>();
-        Name = transform.Find("name").GetComponent<Text>();
+        Msg = FindTool.FindChildComponent<Text>(transform, "一级界面/msg");
+        Type = FindTool.FindChildComponent<Text>(transform, "一级界面/type"); 
+        Sex = FindTool.FindChildComponent<Text>(transform, "一级界面/sex"); 
+        Name = FindTool.FindChildComponent<Text>(transform, "一级界面/name"); 
     }
 
     /// <summary>

@@ -22,4 +22,9 @@ namespace MTFrame.MTPool
     {
 
     }
+
+    public class ResultTextPool:BasePool
+    {
+
+    }
 }

@@ -20,6 +20,15 @@ public class SoftwareSettingsTool : MainBehavior, ISerializeButton
         Instance = this;
     }
 
+    protected override void Start()
+    {
+        base.Start();
+        if(Config.Instance)
+        {
+            isOpenPrepose = Config.Instance.configData.是否开启软件前置;
+        }
+    }
+
     public List<string> SerializeButtonName
     {
         get

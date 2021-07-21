@@ -250,6 +250,7 @@ GameObject:
   - component: {fileID: 75978460}
   - component: {fileID: 75978459}
   - component: {fileID: 75978458}
+  - component: {fileID: 75978462}
   m_Layer: 5
   m_Name: ForegroundScreenWindow
   m_TagString: Untagged
@@ -336,7 +337,7 @@ Canvas:
   m_GameObject: {fileID: 75978456}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
+  m_RenderMode: 0
   m_Camera: {fileID: 719689703}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
@@ -348,6 +349,21 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &75978462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 75978456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26c3c27998d78bc46b229518f5526672, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentTouchList: []
+  myTouchs: []
+  RaycastInCanvas: {fileID: 75978459}
 --- !u!1 &182017296
 GameObject:
   m_ObjectHideFlags: 0
@@ -626,6 +642,7 @@ GameObject:
   - component: {fileID: 1765958836}
   - component: {fileID: 1765958831}
   - component: {fileID: 1765958832}
+  - component: {fileID: 1765958833}
   m_Layer: 5
   m_Name: Main
   m_TagString: Untagged
@@ -699,6 +716,8 @@ MonoBehaviour:
     type: 3}
   CirleImagePrefabs: {fileID: 7416524163664902528, guid: e6bcb9f8b1a81904bac9985d9538eb55,
     type: 3}
+  ResulttextPrefabs: {fileID: 2334296703802305119, guid: 7f15c880ca058ba4f8da3124ef341d9d,
+    type: 3}
 --- !u!114 &1765958832
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -709,6 +728,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f6d907025f15b4549a5e58c02ca6f712, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PicGroup: []
+  VideoPath: []
+--- !u!114 &1765958833
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1765958827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b375c4594fded644f809474d116dda08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &1765958835

@@ -23,7 +23,7 @@ public class BigImage : MonoBehaviour
     [HideInInspector]
     public bool isCheck = false;
 
-    float returnTimer = 200;
+    public float returnTimer = 200;
     float r = 700;
     float MaxScale = 2.5f;
     float MinScale = 1.0f;
@@ -36,8 +36,9 @@ public class BigImage : MonoBehaviour
 
     private void OnEnable()
     {
+        if(PoolManager.Instance)
         moveImageList = PoolManager.CirleimagePool.UsePool;
-        isTouch = true;
+        isTouch = false;
         isCheck = true;
     }
 
@@ -54,11 +55,21 @@ public class BigImage : MonoBehaviour
         }
     }
 
+    public void OnPointDown()
+    {
+        isTouch = true;
+        touchTimer = 0;
+    }
 
+    public void OnPointUp()
+    {
+        isTouch = false;
+        touchTimer = 0;
+    }
 
     private void FixedUpdate()
     {
-        if (isTouch)
+        if (!isTouch)
         {
             touchTimer += Time.fixedDeltaTime;
             if (touchTimer > returnTimer)
@@ -67,6 +78,7 @@ public class BigImage : MonoBehaviour
                 touchTimer = 0;
                 isTouch = false;
                 isCheck = false;
+                System.GC.Collect();
             }
         }
         if (!isCheck)
@@ -102,6 +114,7 @@ public class BigImage : MonoBehaviour
     IEnumerator CloseCircleIE()
     {
         isCheck = false;
+        
         yield return new WaitForSeconds(0.1f);
         for (int i = 0; i < moveImageList.Count; i++)
         {
@@ -120,18 +133,6 @@ public class BigImage : MonoBehaviour
     public void CloseCircle()
     {
         StartCoroutine(CloseCircleIE());
-    }
-
-    private void Update()
-    {
-        if(transform.localScale.x > MaxScale )
-        {
-            transform.localScale = Vector3.one * MaxScale;
-        }
-
-        if(transform.localScale.x < MinScale)
-        {
-            transform.localScale = Vector3.one * MinScale;
-        }
+        UDPSend.Instance.Send("close");
     }
 }

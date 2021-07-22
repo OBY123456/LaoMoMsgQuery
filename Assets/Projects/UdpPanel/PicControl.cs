@@ -6,7 +6,7 @@ using UnityEngine.UI;
 [ExecuteInEditMode]
 public class PicControl : MonoBehaviour
 {
-    public CanvasGroup canvasGroup, TipText;
+    public CanvasGroup canvasGroup, TipGroup,Rawcanvas;
     public Button LeftButton, RightButton;
     public RawImage rawImage;
     public List<Texture2D> PicGroup = new List<Texture2D>();
@@ -22,17 +22,13 @@ public class PicControl : MonoBehaviour
         RightButton = FindTool.FindChildComponent<Button>(transform, "Image/RightBtn");
         canvasGroup = transform.GetComponent<CanvasGroup>();
         rect = FindTool.FindChildComponent<RectTransform>(transform, "Image");
-        TipText = FindTool.FindChildComponent<CanvasGroup>(transform, "Text");
+        TipGroup = FindTool.FindChildComponent<CanvasGroup>(transform, "tips");
+        Rawcanvas = FindTool.FindChildComponent<CanvasGroup>(transform, "Image");
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        if (ExcelControl.Instance)
-        {
-            PicGroup = ExcelControl.Instance.PicGroup;
-        }
-
         if(Config.Instance)
         {
             WidthMax = Config.Instance.configData.图片宽;
@@ -70,12 +66,14 @@ public class PicControl : MonoBehaviour
         Count = 0;
         if (PicGroup.Count > 0)
         {
-            TipText.Hide();
+            TipGroup.Hide();
+            Rawcanvas.Open();
             SetTexture(PicGroup[Count]);
         }
         else
         {
-            TipText.Open();
+            TipGroup.Open();
+            Rawcanvas.Hide();
         }
         canvasGroup.Open();
     }
@@ -92,6 +90,11 @@ public class PicControl : MonoBehaviour
 
     float width;
     float Height;
+
+    /// <summary>
+    /// 设置图片，按比例限制宽高
+    /// </summary>
+    /// <param name="texture2D"></param>
     private void SetTexture(Texture2D texture2D)
     {
         rawImage.texture = texture2D;

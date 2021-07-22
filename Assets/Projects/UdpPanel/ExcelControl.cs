@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Data;
 using System.IO;
 using Excel;
+using Newtonsoft.Json;
 
 public class ExcelData
 {
@@ -29,6 +30,13 @@ public class PersonData
     public string Name;
     public string Sex;
     public string Msg;
+    public string Birthday;
+}
+
+public class HeadData
+{
+    public string Name;
+    public string Birthday;
 }
 
 public enum LaoMoType
@@ -50,12 +58,18 @@ public class ExcelControl : MonoBehaviour
     public ExcelData ShiJiData;
     public ExcelData GuoJiaJiData;
 
-    public Dictionary<string, PersonData> ShengJiMsg = new Dictionary<string, PersonData>();
-    public Dictionary<string, PersonData> ShiJiMsg = new Dictionary<string, PersonData>();
-    public Dictionary<string, PersonData> QuanGuoMsg = new Dictionary<string, PersonData>();
+    public Dictionary<HeadData, PersonData> ShengJiMsg = new Dictionary<HeadData, PersonData>();
+    public Dictionary<HeadData, PersonData> ShiJiMsg = new Dictionary<HeadData, PersonData>();
+    public Dictionary<HeadData, PersonData> QuanGuoMsg = new Dictionary<HeadData, PersonData>();
 
-    public List<Texture2D> PicGroup = new List<Texture2D>();
-    public List<string> VideoPath = new List<string>();
+    public Dictionary<string, List<Texture2D>>  PicGroup = new Dictionary<string, List<Texture2D>>();
+    public Dictionary<string, List<string>> VideoGroup = new Dictionary<string, List<string>>();
+
+    private Dictionary<string, string> VideoPath = new Dictionary<string, string>();
+    private Dictionary<string, string> PicPath = new Dictionary<string, string>();
+    public List<HeadData> headDatas = new List<HeadData>();
+    //查重用
+    private bool IsRepeat;
 
     private void Awake()
     {
@@ -71,13 +85,16 @@ public class ExcelControl : MonoBehaviour
             personData.Type = ShengJiData.dataSet.Tables[0].Rows[i][0].ToString();
             personData.Name = ShengJiData.dataSet.Tables[0].Rows[i][1].ToString();
             personData.Sex = "(" + ShengJiData.dataSet.Tables[0].Rows[i][2].ToString() + ")";
-            personData.Msg = Sentence(Replace(ShengJiData.dataSet.Tables[0].Rows[i][3].ToString()), ShengJiData.dataSet.Tables[0].Rows[i][5].ToString(),
+            personData.Birthday = Replace(ShengJiData.dataSet.Tables[0].Rows[i][3].ToString());
+            personData.Msg = Sentence(personData.Birthday, ShengJiData.dataSet.Tables[0].Rows[i][5].ToString(),
                 ShengJiData.dataSet.Tables[0].Rows[i][4].ToString(), ShengJiData.dataSet.Tables[0].Rows[i][8].ToString(), ShengJiData.dataSet.Tables[0].Rows[i][7].ToString());
 
-            if(!ShengJiMsg.ContainsKey(personData.Name))
-            {
-                ShengJiMsg.Add(personData.Name, personData);
-            }     
+            HeadData headData = new HeadData();
+            headData.Name = personData.Name;
+            headData.Birthday = personData.Birthday;
+
+            ShengJiMsg.Add(headData, personData);
+            headDatas.Add(headData);
         }
 
         for (int j = 1; j < ShiJiData.rows - 1; j++)
@@ -86,13 +103,16 @@ public class ExcelControl : MonoBehaviour
             personData.Type = ShiJiData.dataSet.Tables[0].Rows[j][0].ToString();
             personData.Name = ShiJiData.dataSet.Tables[0].Rows[j][1].ToString(); 
             personData.Sex = "(" + ShiJiData.dataSet.Tables[0].Rows[j][2].ToString() + ")";
-            personData.Msg = Sentence(Replace(ShiJiData.dataSet.Tables[0].Rows[j][3].ToString()), ShiJiData.dataSet.Tables[0].Rows[j][7].ToString(),
+            personData.Birthday = Replace(ShiJiData.dataSet.Tables[0].Rows[j][3].ToString());
+            personData.Msg = Sentence(personData.Birthday, ShiJiData.dataSet.Tables[0].Rows[j][7].ToString(),
                 ShiJiData.dataSet.Tables[0].Rows[j][5].ToString(), ShiJiData.dataSet.Tables[0].Rows[j][11].ToString(), ShiJiData.dataSet.Tables[0].Rows[j][10].ToString());
 
-            if (!ShiJiMsg.ContainsKey(personData.Name))
-            {
-                ShiJiMsg.Add(personData.Name, personData);
-            }
+            HeadData headData = new HeadData();
+            headData.Name = personData.Name;
+            headData.Birthday = personData.Birthday;
+
+            ShiJiMsg.Add(headData, personData);
+            headDatas.Add(headData);
         }
 
         for (int k = 1; k < GuoJiaJiData.rows - 1; k++)
@@ -101,26 +121,23 @@ public class ExcelControl : MonoBehaviour
             personData.Type = GuoJiaJiData.dataSet.Tables[0].Rows[k][0].ToString();
             personData.Name = GuoJiaJiData.dataSet.Tables[0].Rows[k][1].ToString();
             personData.Sex = "(" + GuoJiaJiData.dataSet.Tables[0].Rows[k][2].ToString() + ")";
-            personData.Msg = Sentence(Replace(GuoJiaJiData.dataSet.Tables[0].Rows[k][3].ToString()), GuoJiaJiData.dataSet.Tables[0].Rows[k][5].ToString(),
+            personData.Birthday = Replace(GuoJiaJiData.dataSet.Tables[0].Rows[k][3].ToString());
+            personData.Msg = Sentence(personData.Birthday, GuoJiaJiData.dataSet.Tables[0].Rows[k][5].ToString(),
                 GuoJiaJiData.dataSet.Tables[0].Rows[k][4].ToString(), GuoJiaJiData.dataSet.Tables[0].Rows[k][8].ToString(), GuoJiaJiData.dataSet.Tables[0].Rows[k][7].ToString());
 
-            if (!QuanGuoMsg.ContainsKey(personData.Name))
-            {
-                QuanGuoMsg.Add(personData.Name, personData);
-            }
+            HeadData headData = new HeadData();
+            headData.Name = personData.Name;
+            headData.Birthday = personData.Birthday;
+
+            QuanGuoMsg.Add(headData, personData);
+            headDatas.Add(headData);
         }
 
-        List<string> PicPath = new List<string>();
-        PicPath = FileHandle.Instance.GetImagePath(Application.streamingAssetsPath + "/Picture");
-        if(PicPath.Count > 0)
-        {
-            for (int i = 0; i < PicPath.Count; i++)
-            {
-                PicGroup.Add(FileHandle.Instance.LoadByIO(PicPath[i]));
-            }
-        }
+        PicPath = FileHandle.Instance.GetFolderPath(Application.streamingAssetsPath + "/Picture");
+        CheckPicPath();
 
-        VideoPath = FileHandle.Instance.GetVideoPath(Application.streamingAssetsPath + "/Video");
+        VideoPath = FileHandle.Instance.GetFolderPath(Application.streamingAssetsPath + "/Video");
+        CheckVideoPath();
     }
 
     private ExcelData LoadData(string Path)
@@ -140,132 +157,39 @@ public class ExcelControl : MonoBehaviour
         return data;
     }
 
+    /// <summary>
+    /// 随机取值
+    /// </summary>
+    /// <returns></returns>
     public PersonData GetPersonMsg()
     {
-        int num = UnityEngine.Random.Range(0,3);
-        switch (num)
+        int num = UnityEngine.Random.Range(0, headDatas.Count - 1);
+        IsRepeat = JudeRepeat(headDatas[num]);
+        while (IsRepeat)
         {
-            case 0:
-                return GetPersonMsg(LaoMoType.省级);
-            case 1:
-                return GetPersonMsg(LaoMoType.市级);
-            case 2:
-                return GetPersonMsg(LaoMoType.全国);
+            num = UnityEngine.Random.Range(0, headDatas.Count - 1);
+            IsRepeat = JudeRepeat(headDatas[num]);
         }
-        return null;
+        WaitPanel.Instance.CurrentListName.Add(headDatas[num]);
+        if (ShengJiMsg.ContainsKey(headDatas[num]))
+        {
+            return ShengJiMsg[headDatas[num]];
+        }
+        else if (ShiJiMsg.ContainsKey(headDatas[num]))
+        {
+            return ShiJiMsg[headDatas[num]];
+        }
+        else if (QuanGuoMsg.ContainsKey(headDatas[num]))
+        {
+            return QuanGuoMsg[headDatas[num]];
+        }
+        else
+        {
+            return null;            
+        }
     }
 
-    bool IsRepeat, IsRepeat2, IsRepeat3;
-    string st1, st2, st3;
-    private PersonData GetPersonMsg(LaoMoType type)
-    {
-        int num;
-        switch (type)
-        {
-            case LaoMoType.省级:
-                num = UnityEngine.Random.Range(1, ShengJiData.rows - 1);
-
-                //这段是去重
-                st1 = ShengJiData.dataSet.Tables[0].Rows[num][1].ToString();
-                IsRepeat = JudeRepeat(st1);
-                while (IsRepeat)
-                {
-                    num = UnityEngine.Random.Range(1, ShengJiData.rows - 1);
-                    st1 = ShengJiData.dataSet.Tables[0].Rows[num][1].ToString();
-                    IsRepeat = JudeRepeat(st1);
-                }
-
-                if (ShengJiMsg.ContainsKey(st1))
-                {
-                    return ShengJiMsg[st1];
-                }
-                else
-                {
-                    return null;
-                }
-            //else
-            //{
-            //    PersonData personData = new PersonData();
-            //    personData.Type = ShengJiData.dataSet.Tables[0].Rows[num][0].ToString();
-            //    personData.Name = st1;
-            //    personData.Sex = "(" + ShengJiData.dataSet.Tables[0].Rows[num][2].ToString() + ")";
-            //    personData.Msg = Sentence(Replace(ShengJiData.dataSet.Tables[0].Rows[num][3].ToString()), ShengJiData.dataSet.Tables[0].Rows[num][5].ToString(),
-            //        ShengJiData.dataSet.Tables[0].Rows[num][4].ToString(), ShengJiData.dataSet.Tables[0].Rows[num][8].ToString(), ShengJiData.dataSet.Tables[0].Rows[num][7].ToString());
-
-            //    ShengJiMsg.Add(personData.Name, personData);
-            //    return personData;
-            //}
-            case LaoMoType.市级:
-                num = UnityEngine.Random.Range(1, ShiJiData.rows - 1);
-
-                //这段是去重
-                st2 = ShiJiData.dataSet.Tables[0].Rows[num][1].ToString();
-                IsRepeat2 = JudeRepeat(st2);
-                while (IsRepeat2)
-                {
-                    num = UnityEngine.Random.Range(1, ShiJiData.rows - 1);
-                    st2 = ShiJiData.dataSet.Tables[0].Rows[num][1].ToString();
-                    IsRepeat2 = JudeRepeat(st2);
-                }
-
-                if (ShiJiMsg.ContainsKey(st2))
-                {
-                    return ShiJiMsg[st2];
-                }
-                else
-                {
-                    return null;
-                }
-                //else
-                //{
-                //    PersonData personData = new PersonData();
-                //    personData.Type = ShiJiData.dataSet.Tables[0].Rows[num][0].ToString();
-                //    personData.Name = st2;
-                //    personData.Sex = "(" + ShiJiData.dataSet.Tables[0].Rows[num][2].ToString() + ")";
-                //    personData.Msg = Sentence(Replace(ShiJiData.dataSet.Tables[0].Rows[num][3].ToString()), ShiJiData.dataSet.Tables[0].Rows[num][7].ToString(),
-                //        ShiJiData.dataSet.Tables[0].Rows[num][5].ToString(), ShiJiData.dataSet.Tables[0].Rows[num][11].ToString(), ShiJiData.dataSet.Tables[0].Rows[num][10].ToString()); ;
-
-                //    ShiJiMsg.Add(personData.Name, personData);
-                //    return personData;
-                //}
-            case LaoMoType.全国:
-                num = UnityEngine.Random.Range(1, GuoJiaJiData.rows - 1);
-
-                //这段是去重
-                st3 = GuoJiaJiData.dataSet.Tables[0].Rows[num][1].ToString();
-                IsRepeat3 = JudeRepeat(st3);
-                while (IsRepeat3)
-                {
-                    num = UnityEngine.Random.Range(1, GuoJiaJiData.rows - 1);
-                    st3 = GuoJiaJiData.dataSet.Tables[0].Rows[num][1].ToString();
-                    IsRepeat3 = JudeRepeat(st3);
-                }
-
-                if (QuanGuoMsg.ContainsKey(st3))
-                {
-                    return QuanGuoMsg[st3];
-                }
-                else
-                {
-                    return null;
-                }
-                //else
-                //{
-                //    PersonData personData = new PersonData();
-                //    personData.Type = GuoJiaJiData.dataSet.Tables[0].Rows[num][0].ToString();
-                //    personData.Name = st3;
-                //    personData.Sex = "(" + GuoJiaJiData.dataSet.Tables[0].Rows[num][2].ToString() + ")";
-                //    personData.Msg = Sentence(Replace(GuoJiaJiData.dataSet.Tables[0].Rows[num][3].ToString()), GuoJiaJiData.dataSet.Tables[0].Rows[num][5].ToString(),
-                //        GuoJiaJiData.dataSet.Tables[0].Rows[num][4].ToString(), GuoJiaJiData.dataSet.Tables[0].Rows[num][8].ToString(), GuoJiaJiData.dataSet.Tables[0].Rows[num][7].ToString()); ;
-
-                //    QuanGuoMsg.Add(personData.Name, personData);
-                //    return personData;
-                //}
-        }
-        return null;
-    }
-
-    private bool JudeRepeat(string Name)
+    private bool JudeRepeat(HeadData Name)
     {
         return WaitPanel.Instance.CurrentListName.Contains(Name);
     }
@@ -311,5 +235,99 @@ public class ExcelControl : MonoBehaviour
         Date = Date.Insert(num, "月");
         Date = Date + "日";
         return Date;
+    }
+
+    /// <summary>
+    /// 排查路径，空文件夹就去掉了
+    /// </summary>
+    private void CheckPicPath()
+    {
+        List<string> vs = new List<string>();
+        if (PicPath.Count > 0)
+        {
+            foreach (var item in PicPath.Keys)
+            {
+                int count = FileHandle.Instance.GetImagePath(PicPath[item]).Count;
+                if (count <= 0)
+                {
+                    vs.Add(item);
+                }
+            }
+        }
+
+        if (vs.Count > 0)
+        {
+            for (int i = 0; i < vs.Count; i++)
+            {
+                PicPath.Remove(vs[i]);
+            }
+        }
+        GetAllPicture();
+    }
+
+    /// <summary>
+    /// 获取所有图片
+    /// </summary>
+    private void GetAllPicture()
+    {
+        if(PicPath.Count > 0)
+        {
+            foreach (var item in PicPath.Keys)
+            {
+                List<string> vs = new List<string>();
+                List<Texture2D> ds = new List<Texture2D>();
+                vs = FileHandle.Instance.GetImagePath(PicPath[item]);
+                for (int i = 0; i < vs.Count; i++)
+                {
+                    ds.Add(FileHandle.Instance.LoadByIO(vs[i]));
+                }
+                PicGroup.Add(item, ds);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 排查路径，空文件夹就去掉了
+    /// </summary>
+    private void CheckVideoPath()
+    {
+        List<string> vs = new List<string>();
+        if (VideoPath.Count > 0)
+        {
+            foreach (var item in VideoPath.Keys)
+            {
+                int count = FileHandle.Instance.GetVideoPath(VideoPath[item]).Count;
+                if (count <= 0)
+                {
+                    vs.Add(item);
+                }
+            }
+        }
+
+        if(vs.Count > 0)
+        {
+            for (int i = 0; i < vs.Count; i++)
+            {
+                VideoPath.Remove(vs[i]);
+            }
+        }
+
+        GetAllVideoPath();
+    }
+
+    /// <summary>
+    /// 获取所有的视频路径
+    /// </summary>
+    private void GetAllVideoPath()
+    {
+        if (VideoPath.Count > 0)
+        {
+            foreach (var item in VideoPath.Keys)
+            {
+                List<string> ds = new List<string>();
+                ds = FileHandle.Instance.GetVideoPath(VideoPath[item]);
+                VideoGroup.Add(item, ds);
+            }
+        }
     }
 }

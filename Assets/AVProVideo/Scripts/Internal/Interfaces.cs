@@ -534,14 +534,14 @@ namespace RenderHeads.Media.AVProVideo
 #endif
 		public static void LogInfo(string message, Object context = null)
 		{
-			if (context == null)
-			{
-				Debug.Log("[AVProVideo] " + message);
-			}
-			else
-			{
-				Debug.Log("[AVProVideo] " + message, context);
-			}
+			//if (context == null)
+			//{
+			//	Debug.Log("[AVProVideo] " + message);
+			//}
+			//else
+			//{
+			//	Debug.Log("[AVProVideo] " + message, context);
+			//}
 		}
 
 		public static string GetTimeString(float totalSeconds, bool showMilliseconds = false)

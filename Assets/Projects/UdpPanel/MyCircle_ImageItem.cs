@@ -58,7 +58,7 @@ public class MyCircle_ImageItem : MyUIBase {
             newBigImage.transform.localPosition = this.transform.localPosition;
 
             MsgSet msg = transform.GetComponent<MsgSet>();
-            newBigImage.GetComponent<BigMsgSet>().SetText(msg.Type.text, msg.Sex.text, msg.Name.text, msg.Msg);
+            newBigImage.GetComponent<BigMsgSet>().SetText(msg.Type.text, msg.Sex.text, msg.Name.text, msg.Msg, msg.Birthday);
         });
     }
 

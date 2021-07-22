@@ -111,6 +111,23 @@ public class FileHandle
         return filePaths;
     }
 
+    string st1, st2;
+    int temp;
+    public Dictionary<string,string> GetFolderPath(string Path)
+    {
+        Dictionary<string, string> filePaths = new Dictionary<string, string>();
+        string[] dirs = Directory.GetDirectories(Path, "*");
+        for (int j = 0; j < dirs.Length; j++)
+        {
+            st1 = dirs[j];
+            temp = st1.IndexOf(@"\");
+            st2 = st1.Substring(temp + 1);
+            filePaths.Add(st2, st1);
+        }
+        //Debug.Log("Folder" + ":一共读取到" + dirs.Length + "个子文件夹");
+        return filePaths;
+    }
+
     /// <summary>
     /// 返回Sprite图片
     /// </summary>

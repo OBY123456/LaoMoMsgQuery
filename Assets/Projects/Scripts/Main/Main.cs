@@ -18,7 +18,7 @@ public class Main : MonoBehaviour
     [Header("是否全屏")]
     public bool fullScreen = true;
 
-    Process process = new Process();
+    //Process process = new Process();
 #endif
 
 
@@ -27,7 +27,7 @@ public class Main : MonoBehaviour
         GameObject.DontDestroyOnLoad(this.gameObject);
 
 #if UNITY_STANDALONE_WIN
-        //Screen.SetResolution(resolution.x, resolution.y, fullScreen);
+        Screen.SetResolution(Screen.width, Screen.width, fullScreen);
 #endif
        
         //AudioManager.Init();//音效初始化
@@ -50,21 +50,21 @@ public class Main : MonoBehaviour
         //在这里更改场景入口
         StateManager.ChangeState(new UIState());
 
-        try
-        {
-            process.StartInfo.FileName = Application.streamingAssetsPath + "/BD_Input_Control_UDP.exe";
-            process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
-            process.Start();
-        }
-        catch (Exception e)
-        {
-            UnityEngine.Debug.Log(e);
-        }
+        //try
+        //{
+        //    process.StartInfo.FileName = Application.streamingAssetsPath + "/BD_Input_Control_UDP.exe";
+        //    process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
+        //    process.Start();
+        //}
+        //catch (Exception e)
+        //{
+        //    UnityEngine.Debug.Log(e);
+        //}
 
     }
 
-    private void OnApplicationQuit()
-    {
-        process.Kill();
-    }
+    //private void OnApplicationQuit()
+    //{
+    //    process.Kill();
+    //}
 }

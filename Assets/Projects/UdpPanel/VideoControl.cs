@@ -9,9 +9,10 @@ public class VideoControl : MonoBehaviour
 {
     public Button LeftButton, RightButton;
     public MediaPlayer mediaPlayer;
-    public CanvasGroup canvasGroup,TipText;
+    public CanvasGroup canvasGroup,TipGroup,VideoGroup;
     public List<string> VideoPath = new List<string>();
     private int Count = 0;
+    public bool IsPlay;
 
     private void Awake()
     {
@@ -19,17 +20,14 @@ public class VideoControl : MonoBehaviour
         LeftButton = FindTool.FindChildComponent<Button>(transform, "VideoPlayer/LeftBtn");
         RightButton = FindTool.FindChildComponent<Button>(transform, "VideoPlayer/RightBtn");
         canvasGroup = transform.GetComponent<CanvasGroup>();
-        TipText = FindTool.FindChildComponent<CanvasGroup>(transform, "Text");
+        TipGroup = FindTool.FindChildComponent<CanvasGroup>(transform, "tips");
+        VideoGroup = FindTool.FindChildComponent<CanvasGroup>(transform, "VideoPlayer");
         //RenderTexture renderTexture = new RenderTexture(400, 300, 24);
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        if(ExcelControl.Instance)
-        {
-            VideoPath = ExcelControl.Instance.VideoPath;
-        }
 
         LeftButton.onClick.AddListener(() => {
             if(VideoPath.Count > 0)
@@ -62,13 +60,18 @@ public class VideoControl : MonoBehaviour
         Count = 0;
         if (VideoPath.Count > 0)
         {
-            TipText.Hide();
+            TipGroup.Hide();
+            VideoGroup.Open();
             mediaPlayer.OpenVideoFromFile(MediaPlayer.FileLocation.RelativeToStreamingAssetsFolder, VideoPath[Count]);
+            IsPlay = true;
         }
         else
         {
-            TipText.Open();
+            TipGroup.Open();
+            VideoGroup.Hide();
+            IsPlay = false;
         }
+        
         canvasGroup.Open();
     }
 
@@ -80,5 +83,6 @@ public class VideoControl : MonoBehaviour
             mediaPlayer.Stop();
         }
         canvasGroup.Hide();
+        IsPlay = false;
     }
 }

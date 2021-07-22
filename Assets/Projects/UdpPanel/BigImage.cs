@@ -28,10 +28,13 @@ public class BigImage : MonoBehaviour
     float MaxScale = 2.5f;
     float MinScale = 1.0f;
 
+    public VideoControl videoControl;
+
     private void Awake()
     {
         bigImage = this.GetComponent<BigImage>();
         QuitButton = transform.Find("QuitButton").GetComponent<Button>();
+        videoControl = FindTool.FindChildComponent<VideoControl>(transform, "VideoGroup");
     }
 
     private void OnEnable()
@@ -69,7 +72,7 @@ public class BigImage : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!isTouch)
+        if (!isTouch && !videoControl.IsPlay)
         {
             touchTimer += Time.fixedDeltaTime;
             if (touchTimer > returnTimer)

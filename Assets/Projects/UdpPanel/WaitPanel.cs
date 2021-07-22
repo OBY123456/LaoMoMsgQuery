@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using MTFrame;
 using System;
+using Newtonsoft.Json;
 
 public class WaitPanel : BasePanel
 {
@@ -35,13 +36,13 @@ public class WaitPanel : BasePanel
     float timer = 0;
 
     [HideInInspector]
-    public List<string> CurrentListName;
+    public List<HeadData> CurrentListName;
 
     protected override void Awake()
     {
         base.Awake();
         Instance = this;
-        CurrentListName = new List<string>();
+        CurrentListName = new List<HeadData>();
     }
 
     protected override void Start()
@@ -118,8 +119,12 @@ public class WaitPanel : BasePanel
         personData = ExcelControl.Instance.GetPersonMsg();
         if(personData != null)
         {
-            msgSet.SetText(personData.Type, personData.Sex, personData.Name, personData.Msg);
-            CurrentListName.Add(personData.Name);
+            msgSet.SetText(personData.Type, personData.Sex, personData.Name, personData.Msg,personData.Birthday);
+            HeadData headData = new HeadData();
+            headData.Name = personData.Name;
+            headData.Birthday = personData.Birthday;
+
+            //CurrentListName.Add(headData);
         }
     }
 }

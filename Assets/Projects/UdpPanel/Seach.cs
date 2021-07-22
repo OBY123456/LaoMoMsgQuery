@@ -22,9 +22,9 @@ public class Seach : MonoBehaviour
     private List<GameObject> ResultObj = new List<GameObject>();
     private List<GameObject> bigImagePool = new List<GameObject>();
 
-    private Dictionary<string, PersonData> ShengJiMsg = new Dictionary<string, PersonData>();
-    private Dictionary<string, PersonData> ShiJiMsg = new Dictionary<string, PersonData>();
-    private Dictionary<string, PersonData> QuanGuoMsg = new Dictionary<string, PersonData>();
+    public Dictionary<HeadData, PersonData> ShengJiMsg = new Dictionary<HeadData, PersonData>();
+    public Dictionary<HeadData, PersonData> ShiJiMsg = new Dictionary<HeadData, PersonData>();
+    public Dictionary<HeadData, PersonData> QuanGuoMsg = new Dictionary<HeadData, PersonData>();
 
     //百度手写输入法信息
     private string Path = @"C:\Program Files (x86)\Baidu\BaiduPinyin\Plugin\HandInput\1.0.0.138\HandInput.exe";
@@ -117,25 +117,25 @@ public class Seach : MonoBehaviour
             return;
         }
 
-        foreach (string item in ShengJiMsg.Keys)
+        foreach (HeadData item in ShengJiMsg.Keys)
         {
-            if(item.Contains(inputField.text) && !string.IsNullOrEmpty(inputField.text))
+            if(item.Name.Contains(inputField.text))
             {
                 ResultList.Add(ShengJiMsg[item]);
             }
         }
 
-        foreach (string item in ShiJiMsg.Keys)
+        foreach (HeadData item in ShiJiMsg.Keys)
         {
-            if (item.Contains(inputField.text) && !string.IsNullOrEmpty(inputField.text))
+            if (item.Name.Contains(inputField.text))
             {
                 ResultList.Add(ShiJiMsg[item]);
             }
         }
 
-        foreach (string item in QuanGuoMsg.Keys)
+        foreach (HeadData item in QuanGuoMsg.Keys)
         {
-            if (item.Contains(inputField.text) && !string.IsNullOrEmpty( inputField.text))
+            if (item.Name.Contains(inputField.text))
             {
                 ResultList.Add(QuanGuoMsg[item]);
             }
@@ -162,7 +162,7 @@ public class Seach : MonoBehaviour
         }
         button.onClick.AddListener(() => {
             //首先判断是否是自己
-            if(personData.Name == gameObject.name)
+            if(personData.Name == msgSet.Name.text && personData.Birthday == msgSet.Birthday)
             {
                 Open();
                 return;
@@ -172,7 +172,7 @@ public class Seach : MonoBehaviour
             {
                 for (int i = 0; i < bigImagePool.Count; i++)
                 {
-                    if(bigImagePool[i].GetComponent<BigMsgSet>().Name.text == personData.Name)
+                    if(bigImagePool[i].GetComponent<BigMsgSet>().Name.text == personData.Name && bigImagePool[i].GetComponent<BigMsgSet>().Birthday == personData.Birthday)
                     {
                         bigImagePool[i].transform.localPosition = transform.localPosition;
                         bigImage.CloseCircle();
@@ -184,7 +184,7 @@ public class Seach : MonoBehaviour
             }
 
             //啥都没有，那就只能用搜索到的信息覆盖掉当前信息了
-            msgSet.SetText(personData.Type, personData.Sex, personData.Name, personData.Msg);
+            msgSet.SetText(personData.Type, personData.Sex, personData.Name, personData.Msg, personData.Birthday);
             Open();
             UDPSend.Instance.Send("close");
         });
@@ -200,10 +200,15 @@ public class Seach : MonoBehaviour
         ClearList();
     }
 
+    string st;
     public void OnPointClick()
     {
         Vector3 vector = Vector3.zero;
-        //Debug.Log(Camera.main.WorldToScreenPoint(transform.localPosition));
+#if UNITY_EDITOR
+        string st = PosX.ToString("0") + "," + PosY.ToString("0") + "," + width + "," + height + "," + Path;
+        UDPSend.Instance.Send(st);
+        return;
+#endif
         vector = Camera.main.WorldToScreenPoint(transform.localPosition);
         if (vector != Vector3.zero)
         {
@@ -214,7 +219,7 @@ public class Seach : MonoBehaviour
         {
             return;
         }
-        string st = PosX.ToString("0") + "," + PosY.ToString("0") + "," + width + "," + height + "," + Path;
+        st = PosX.ToString("0") + "," + PosY.ToString("0") + "," + width + "," + height + "," + Path;
         UDPSend.Instance.Send(st);
     }
 

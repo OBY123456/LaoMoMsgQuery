@@ -22,12 +22,9 @@ public class Seach : MonoBehaviour
     private List<GameObject> ResultObj = new List<GameObject>();
     private List<GameObject> bigImagePool = new List<GameObject>();
 
-    public Dictionary<HeadData, PersonData> ShengJiMsg = new Dictionary<HeadData, PersonData>();
-    public Dictionary<HeadData, PersonData> ShiJiMsg = new Dictionary<HeadData, PersonData>();
-    public Dictionary<HeadData, PersonData> QuanGuoMsg = new Dictionary<HeadData, PersonData>();
-
     //百度手写输入法信息
     private string Path = @"C:\Program Files (x86)\Baidu\BaiduPinyin\Plugin\HandInput\1.0.0.138\HandInput.exe";
+
     private float width,height;
     private float PosX, PosY;
 
@@ -79,13 +76,6 @@ public class Seach : MonoBehaviour
 
         inputField.onValueChanged.AddListener(delegate { ValueChangeCheck(); });
 
-        if(ExcelControl.Instance)
-        {
-            ShengJiMsg = ExcelControl.Instance.ShengJiMsg;
-            ShiJiMsg = ExcelControl.Instance.ShiJiMsg;
-            QuanGuoMsg = ExcelControl.Instance.QuanGuoMsg;
-        }
-
         if(PoolManager.Instance)
         bigImagePool = PoolManager.BigimagePool.UsePool;
 
@@ -117,27 +107,11 @@ public class Seach : MonoBehaviour
             return;
         }
 
-        foreach (HeadData item in ShengJiMsg.Keys)
+        for (int i = 0; i < ExcelControl.Instance.headDatas.Count - 1; i++)
         {
-            if(item.Name.Contains(inputField.text))
+            if(ExcelControl.Instance.headDatas[i].Name.Contains(inputField.text))
             {
-                ResultList.Add(ShengJiMsg[item]);
-            }
-        }
-
-        foreach (HeadData item in ShiJiMsg.Keys)
-        {
-            if (item.Name.Contains(inputField.text))
-            {
-                ResultList.Add(ShiJiMsg[item]);
-            }
-        }
-
-        foreach (HeadData item in QuanGuoMsg.Keys)
-        {
-            if (item.Name.Contains(inputField.text))
-            {
-                ResultList.Add(QuanGuoMsg[item]);
+                ResultList.Add(ExcelControl.Instance.AllPersonMsg[ExcelControl.Instance.headDatas[i]]);
             }
         }
 
@@ -209,11 +183,13 @@ public class Seach : MonoBehaviour
         UDPSend.Instance.Send(st);
         return;
 #endif
-        vector = Camera.main.WorldToScreenPoint(transform.localPosition);
+        vector = transform.GetComponent<RectTransform>().position;
+        Debug.Log(transform.GetComponent<RectTransform>().position);
         if (vector != Vector3.zero)
         {
-            PosX = vector.x;
-            PosY = Screen.height - vector.y;
+            //2165 和 1280是根据现场实际情况的边际，现场电脑的实际长宽和分辨率完全不一样的
+            PosX = (vector.x / Screen.width * 2165f) + width * (2165 / 3840);
+            PosY = (1 - vector.y / Screen.height) * 1280f + height *(1280 / 1920);
         }
         else
         {

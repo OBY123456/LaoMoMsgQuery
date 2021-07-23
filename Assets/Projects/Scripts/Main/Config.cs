@@ -51,6 +51,10 @@ public class ConfigData
     public float 图片高;
 
     public bool 是否开启软件前置;
+
+    //public float offectX;
+
+    //public float offectY;
 }
 
 

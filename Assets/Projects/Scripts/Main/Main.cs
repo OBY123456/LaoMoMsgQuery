@@ -44,27 +44,10 @@ public class Main : MonoBehaviour
     {
 
 #if UNITY_STANDALONE_WIN
-        if(Config.Instance)
-        Cursor.visible = Config.Instance.configData.isCursor;
+        if (Config.Instance)
+            Cursor.visible = Config.Instance.configData.isCursor;
 #endif
         //在这里更改场景入口
         StateManager.ChangeState(new UIState());
-
-        //try
-        //{
-        //    process.StartInfo.FileName = Application.streamingAssetsPath + "/BD_Input_Control_UDP.exe";
-        //    process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
-        //    process.Start();
-        //}
-        //catch (Exception e)
-        //{
-        //    UnityEngine.Debug.Log(e);
-        //}
-
     }
-
-    //private void OnApplicationQuit()
-    //{
-    //    process.Kill();
-    //}
 }

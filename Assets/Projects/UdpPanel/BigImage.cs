@@ -43,6 +43,7 @@ public class BigImage : MonoBehaviour
         moveImageList = PoolManager.CirleimagePool.UsePool;
         isTouch = false;
         isCheck = true;
+        touchTimer = 0;
     }
 
     // Start is called before the first frame update

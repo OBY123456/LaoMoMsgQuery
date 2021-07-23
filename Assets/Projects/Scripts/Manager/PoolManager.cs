@@ -24,7 +24,6 @@ public class PoolManager:MonoBehaviour
     {
         Instance = this;
         Init();
-        
     }
 
     /// <summary>
@@ -39,7 +38,7 @@ public class PoolManager:MonoBehaviour
         CirleimagePool.Init();
 
         ResulttextPool = new ResultTextPool();
-        ResulttextPool.Init();
+        ResulttextPool.Init(); 
     }
 
     /// <summary>

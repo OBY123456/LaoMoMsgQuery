@@ -58,16 +58,15 @@ public class ExcelControl : MonoBehaviour
     public ExcelData ShiJiData;
     public ExcelData GuoJiaJiData;
 
-    public Dictionary<HeadData, PersonData> ShengJiMsg = new Dictionary<HeadData, PersonData>();
-    public Dictionary<HeadData, PersonData> ShiJiMsg = new Dictionary<HeadData, PersonData>();
-    public Dictionary<HeadData, PersonData> QuanGuoMsg = new Dictionary<HeadData, PersonData>();
+    public Dictionary<HeadData, PersonData> AllPersonMsg = new Dictionary<HeadData, PersonData>();
+    public List<HeadData> headDatas = new List<HeadData>();
 
     public Dictionary<string, List<Texture2D>>  PicGroup = new Dictionary<string, List<Texture2D>>();
     public Dictionary<string, List<string>> VideoGroup = new Dictionary<string, List<string>>();
 
     private Dictionary<string, string> VideoPath = new Dictionary<string, string>();
     private Dictionary<string, string> PicPath = new Dictionary<string, string>();
-    public List<HeadData> headDatas = new List<HeadData>();
+    
     //查重用
     private bool IsRepeat;
 
@@ -93,7 +92,7 @@ public class ExcelControl : MonoBehaviour
             headData.Name = personData.Name;
             headData.Birthday = personData.Birthday;
 
-            ShengJiMsg.Add(headData, personData);
+            AllPersonMsg.Add(headData, personData);
             headDatas.Add(headData);
         }
 
@@ -111,7 +110,7 @@ public class ExcelControl : MonoBehaviour
             headData.Name = personData.Name;
             headData.Birthday = personData.Birthday;
 
-            ShiJiMsg.Add(headData, personData);
+            AllPersonMsg.Add(headData, personData);
             headDatas.Add(headData);
         }
 
@@ -129,7 +128,7 @@ public class ExcelControl : MonoBehaviour
             headData.Name = personData.Name;
             headData.Birthday = personData.Birthday;
 
-            QuanGuoMsg.Add(headData, personData);
+            AllPersonMsg.Add(headData, personData);
             headDatas.Add(headData);
         }
 
@@ -165,27 +164,26 @@ public class ExcelControl : MonoBehaviour
     {
         int num = UnityEngine.Random.Range(0, headDatas.Count - 1);
         IsRepeat = JudeRepeat(headDatas[num]);
-        while (IsRepeat)
+        try
         {
-            num = UnityEngine.Random.Range(0, headDatas.Count - 1);
-            IsRepeat = JudeRepeat(headDatas[num]);
+            while (IsRepeat)
+            {
+                num = UnityEngine.Random.Range(0, headDatas.Count - 1);
+                IsRepeat = JudeRepeat(headDatas[num]);
+            }
+        }
+        catch
+        {
+            return null;
         }
         WaitPanel.Instance.CurrentListName.Add(headDatas[num]);
-        if (ShengJiMsg.ContainsKey(headDatas[num]))
+        if (AllPersonMsg.ContainsKey(headDatas[num]))
         {
-            return ShengJiMsg[headDatas[num]];
-        }
-        else if (ShiJiMsg.ContainsKey(headDatas[num]))
-        {
-            return ShiJiMsg[headDatas[num]];
-        }
-        else if (QuanGuoMsg.ContainsKey(headDatas[num]))
-        {
-            return QuanGuoMsg[headDatas[num]];
+            return AllPersonMsg[headDatas[num]];
         }
         else
         {
-            return null;            
+            return null;
         }
     }
 

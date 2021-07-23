@@ -64,21 +64,29 @@ public class TouchItem : MonoBehaviour {
             {
                 return;
             }
-
-            for (int i = 0; i < Input.touches.Length; i++)
+            try
             {
-                if (Input.touches[i].fingerId == fingerId1)
+                for (int i = 0; i < Input.touches.Length; i++)
                 {
-                    newTouch1 = Input.touches[i];
+                    if (Input.touches[i].fingerId == fingerId1)
+                    {
+                        newTouch1 = Input.touches[i];
+                    }
+                }
+
+                for (int i = 0; i < Input.touches.Length; i++)
+                {
+                    if (Input.touches[i].fingerId == fingerId2)
+                    {
+                        newTouch2 = Input.touches[i];
+                    }
                 }
             }
-
-            for (int i = 0; i < Input.touches.Length; i++)
+            catch
             {
-                if (Input.touches[i].fingerId == fingerId2)
-                {
-                    newTouch2 = Input.touches[i];
-                }
+                isScale = false;
+                fingerId1 = -1;
+                fingerId2 = -1;
             }
             //newTouch1 = Input.GetTouch(fingerId1);
             //newTouch2 = Input.GetTouch(fingerId2);

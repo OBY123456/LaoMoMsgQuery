@@ -48,9 +48,11 @@ public class WaitPanel : BasePanel
     protected override void Start()
     {
         base.Start();
-
-        createTimer = (XOffset + 320) / (2f * (1 / Time.fixedDeltaTime));
-        StartCoroutine(LoadImage());
+        if(ExcelControl.Instance)
+        {
+            createTimer = (XOffset + 320) / (2f * (1 / Time.fixedDeltaTime));
+            StartCoroutine(LoadImage());
+        }
     }
 
     public override void InitFind()
@@ -85,6 +87,8 @@ public class WaitPanel : BasePanel
                 }
             }
         }
+
+
     }
 
     //加载图片
@@ -123,8 +127,6 @@ public class WaitPanel : BasePanel
             HeadData headData = new HeadData();
             headData.Name = personData.Name;
             headData.Birthday = personData.Birthday;
-
-            //CurrentListName.Add(headData);
         }
     }
 }

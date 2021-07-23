@@ -236,6 +236,7 @@ MonoBehaviour:
   msgSet: {fileID: 8437085200267970935}
   videoControl: {fileID: 4453840024638840742}
   picControl: {fileID: 1334474552449060419}
+  TestText: {fileID: 0}
 --- !u!114 &6790278681882599036
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1181,7 +1182,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0}
+  m_AnchoredPosition: {x: 0, y: -0.00003627927}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1650303692621658151
@@ -1369,6 +1370,7 @@ MonoBehaviour:
   mediaPlayer: {fileID: 4872329684086714849}
   canvasGroup: {fileID: 8260902619752148232}
   TipGroup: {fileID: 2847620525273703898}
+  VideoGroup: {fileID: 5274374218894673433}
   VideoPath: []
   IsPlay: 0
 --- !u!1 &4929252883017610707
@@ -2681,10 +2683,10 @@ RectTransform:
   m_Father: {fileID: 6194144502084361920}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -23.550003}
-  m_SizeDelta: {x: 370, y: 322.9}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: -23.57}
+  m_SizeDelta: {x: 0, y: -47.14}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1904199306225029371
 MonoBehaviour:

@@ -48,59 +48,61 @@ public class MyTouch : MonoBehaviour {
         RaycastInCanvas = transform.GetComponent<GraphicRaycaster>();
     }
 
+    Touch[] touches;
     void Update()
     {
-        Touch[] touches = Input.touches;
-
+        touches = Input.touches;
+        if (touches.Length <= 0)
+            return;
         // 遍历所有的已经记录的手指  
         // --掦除已经不存在的手指  
-        foreach (MyFinger mf in MyFinger.Fingers)
+
+        for (int i = 0; i < MyFinger.Fingers.Count; i++)
         {
-            if (mf.id == -1)
+            if(MyFinger.Fingers[i].id == -1)
             {
                 continue;
             }
             bool stillExit = false;
-            foreach (Touch t in touches)
+            for (int j = 0; j < touches.Length; j++)
             {
-                if (mf.id == t.fingerId)
+                if(MyFinger.Fingers[i].id == touches[j].fingerId)
                 {
                     stillExit = true;
                     break;
                 }
-            }
-            // 掦除  
-            if (stillExit == false)
-            {
-                mf.id = -1;
-                mf.touchTrans = null;
+
+                if (stillExit == false)
+                {
+                    MyFinger.Fingers[i].id = -1;
+                    MyFinger.Fingers[i].touchTrans = null;
+                }
             }
         }
+
         // 遍历当前的touches  
         // --并检查它们在是否已经记录在AllFinger中  
         // --是的话更新对应手指的状态，不是的加进去  
-        foreach (Touch t in touches)
+        for (int k = 0; k < touches.Length; k++)
         {
             bool stillExit = false;
-            // 存在--更新对应的手指  
-            foreach (MyFinger mf in MyFinger.Fingers)
+            for (int n = 0; n < MyFinger.Fingers.Count; n++)
             {
-                if (t.fingerId == mf.id)
+                if (touches[k].fingerId == MyFinger.Fingers[n].id)
                 {
                     stillExit = true;
-                    mf.touch = t;
+                    MyFinger.Fingers[n].touch = touches[k];
                     break;
                 }
             }
-            // 不存在--添加新记录  
             if (!stillExit)
             {
-                foreach (MyFinger mf in MyFinger.Fingers)
+                for (int m = 0; m < MyFinger.Fingers.Count; m++)
                 {
-                    if (mf.id == -1)
+                    if(MyFinger.Fingers[m].id == -1)
                     {
-                        mf.id = t.fingerId;
-                        mf.touch = t;
+                        MyFinger.Fingers[m].id = touches[k].fingerId;
+                        MyFinger.Fingers[m].touch = touches[k];
                         break;
                     }
                 }

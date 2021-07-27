@@ -87,8 +87,6 @@ public class WaitPanel : BasePanel
                 }
             }
         }
-
-
     }
 
     //加载图片
@@ -124,9 +122,6 @@ public class WaitPanel : BasePanel
         if(personData != null)
         {
             msgSet.SetText(personData.Type, personData.Sex, personData.Name, personData.Msg,personData.Birthday);
-            HeadData headData = new HeadData();
-            headData.Name = personData.Name;
-            headData.Birthday = personData.Birthday;
         }
     }
 }

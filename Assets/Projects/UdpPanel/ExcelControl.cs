@@ -66,9 +66,6 @@ public class ExcelControl : MonoBehaviour
 
     private Dictionary<string, string> VideoPath = new Dictionary<string, string>();
     private Dictionary<string, string> PicPath = new Dictionary<string, string>();
-    
-    //查重用
-    private bool IsRepeat;
 
     private void Awake()
     {
@@ -163,19 +160,6 @@ public class ExcelControl : MonoBehaviour
     public PersonData GetPersonMsg()
     {
         int num = UnityEngine.Random.Range(0, headDatas.Count - 1);
-        IsRepeat = JudeRepeat(headDatas[num]);
-        try
-        {
-            while (IsRepeat)
-            {
-                num = UnityEngine.Random.Range(0, headDatas.Count - 1);
-                IsRepeat = JudeRepeat(headDatas[num]);
-            }
-        }
-        catch
-        {
-            return null;
-        }
         WaitPanel.Instance.CurrentListName.Add(headDatas[num]);
         if (AllPersonMsg.ContainsKey(headDatas[num]))
         {
